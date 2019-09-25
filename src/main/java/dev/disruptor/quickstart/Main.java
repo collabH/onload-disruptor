@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadFactory;
 public class Main {
     public static void main(String[] args) {
         OrderEventFactory orderEventFactory = new OrderEventFactory();
-        int ringBufferSize = 1024 * 1024;
+        int ringBufferSize = 1024*1024;
         /**
          * 1.orderEventFactory 消息(Event)工厂
          * 2.ringBufferSize 容器的长度
