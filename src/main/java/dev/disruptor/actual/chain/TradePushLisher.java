@@ -1,4 +1,4 @@
-package dev.disruptor.actual;
+package dev.disruptor.actual.chain;
 
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.dsl.Disruptor;

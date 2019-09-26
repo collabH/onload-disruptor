@@ -1,6 +1,7 @@
-package dev.disruptor.actual;
+package dev.disruptor.actual.chain;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
@@ -10,7 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -29,8 +33,14 @@ public class Main {
         //1.构建Disruptor
         int ringBufferSize = 1024 * 1024;
         TradeFactory tradeFactory = new TradeFactory();
+        /**
+         * fixme
+         * 如果需要设置五个EventHandler，Disruptor单机需要默认启动5个线程，因为BatchEventProcessor方法内部的run方法，如果有一个handle就需要1个线程
+         * 对于单消费者模式来说
+         */
         Disruptor<Trade> disruptor = new Disruptor<>(
-                tradeFactory, ringBufferSize, (ThreadFactory) Thread::new,
+                tradeFactory, ringBufferSize, new ThreadFactoryBuilder().setNameFormat("disruptor-executor-%d")
+                .build(),
                 ProducerType.SINGLE, new YieldingWaitStrategy());
         //2 把消费者设置到disruptor中 handleEventsWith
         //2.1 串行操作
@@ -38,7 +48,28 @@ public class Main {
 //                .handleEventsWith(new TradeHandleEvent1())
 //                .handleEventsWith(new TradeHandleEvent2());
         //2.2并行操作
-        disruptor.handleEventsWith(new TradeHandleEvent(), new TradeHandleEvent1(), new TradeHandleEvent2());
+        //disruptor.handleEventsWith(new TradeHandleEvent(), new TradeHandleEvent1(), new TradeHandleEvent2());
+        //2.3菱形操作(一)
+       /* disruptor.handleEventsWith(new TradeHandleEvent(), new TradeHandleEvent1())
+                //串行
+                .handleEventsWith(new TradeHandleEvent2());*/
+        //2.3菱形操作(二)
+//        disruptor.handleEventsWith(new TradeHandleEvent(), new TradeHandleEvent1())
+//                .then(new TradeHandleEvent2());
+        //2.4多边形操作
+        TradeHandleEvent h1 = new TradeHandleEvent();
+        TradeHandleEvent1 h2 = new TradeHandleEvent1();
+        TradeHandleEvent2 h3 = new TradeHandleEvent2();
+        TradeHandleEvent3 h4 = new TradeHandleEvent3();
+        TradeHandleEvent4 h5 = new TradeHandleEvent4();
+        //并行执行h1 h4
+        disruptor.handleEventsWith(h1, h4);
+        //h1执行完成后执行h2
+        disruptor.after(h1).handleEventsWith(h2);
+        //h4执行完成后执行h5
+        disruptor.after(h4).handleEventsWith(h5);
+        //h2 h5执行完毕后执行h3
+        disruptor.after(h2, h5).handleEventsWith(h3);
         //3.启动disruptor
         RingBuffer<Trade> ringBuffer = disruptor.start();
         submitEs.execute(new TradePushLisher(latch, disruptor));
