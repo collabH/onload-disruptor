@@ -1,4 +1,4 @@
-package dev.disruptor.actual.chain.multi;
+package dev.disruptor.actual.multi;
 
 import com.lmax.disruptor.WorkHandler;
 import lombok.extern.slf4j.Slf4j;

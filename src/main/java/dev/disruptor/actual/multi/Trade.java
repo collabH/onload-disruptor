@@ -1,4 +1,4 @@
-package dev.disruptor.actual.chain.multi;
+package dev.disruptor.actual.multi;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

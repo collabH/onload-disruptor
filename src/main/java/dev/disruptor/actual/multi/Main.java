@@ -1,10 +1,11 @@
-package dev.disruptor.actual.chain.multi;
+package dev.disruptor.actual.multi;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.ProducerType;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,14 +48,15 @@ public class Main {
 
         for (int i = 0; i < 100; i++) {
             producerThreadPool.execute(() -> {
-                Producer producer = new Producer();
+                Producer1 producer = new Producer1(ringBuffer);
                 try {
                     latch.await();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 for (int j = 0; j < 100; j++) {
-                    ringBuffer.publishEvent(producer);
+//                    ringBuffer.publishEvent(producer);
+                    producer.sendData(UUID.randomUUID().toString());
                 }
             });
         }

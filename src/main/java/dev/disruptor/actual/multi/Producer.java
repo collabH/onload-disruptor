@@ -1,4 +1,4 @@
-package dev.disruptor.actual.chain.multi;
+package dev.disruptor.actual.multi;
 
 import com.lmax.disruptor.EventTranslator;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ public class Producer implements EventTranslator<Order> {
     @Override
     public void translateTo(Order event, long sequence) {
         event.setId(UUID.randomUUID().toString());
+
         log.info("sequence：{}", sequence);
     }
 }
