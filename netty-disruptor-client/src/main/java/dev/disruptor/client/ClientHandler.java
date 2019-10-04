@@ -1,9 +1,10 @@
 package dev.disruptor.client;
 
 import dev.disruptor.common.TranslatorData;
+import dev.disruptor.pool.MessageProducer;
+import dev.disruptor.pool.RingBufferWorkerPoolFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,12 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        try {
+     /*   try {
             TranslatorData response = (TranslatorData) msg;
             log.info("response:{}", response);
         } finally {
             //一定要注意 用完了缓存 要进行释放
             ReferenceCountUtil.release(msg);
-        }
+        }*/
+        TranslatorData response = (TranslatorData) msg;
+        String producerId = "disruptor:producer:" + response.getId();
+        MessageProducer messageProducer = RingBufferWorkerPoolFactory.getInstance().getMessageProducer(producerId);
+        messageProducer.onData(response, ctx);
     }
 }

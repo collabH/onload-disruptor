@@ -20,6 +20,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.0.1-jre</version>
+        </dependency>
         <!-- 序列化框架marshalling -->
         <dependency>
             <groupId>org.jboss.marshalling</groupId>
