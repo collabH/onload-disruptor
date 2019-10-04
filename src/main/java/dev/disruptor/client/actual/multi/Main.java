@@ -62,11 +62,11 @@ public class Main {
         }
 
         Thread.sleep(3000);
-        log.info("线程创建完毕，开始生产数据");
+        System.out.println("线程创建完毕，开始生产数据");
         latch.countDown();
 
         Thread.sleep(4000);
-        log.info("总条数:{}", consumers[0].getCount());
+        System.out.println("总条数:"+ consumers[0].getCount());
     }
 
 

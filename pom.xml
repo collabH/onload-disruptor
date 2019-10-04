@@ -3,7 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <groupId>dev.onload.disruptor</groupId>
     <artifactId>onload-disruptor</artifactId>
     <packaging>pom</packaging>
@@ -67,28 +72,14 @@
             <artifactId>commons-collections4</artifactId>
             <version>4.2</version>
         </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.42.Final</version>
-        </dependency>
-        <!-- 序列化框架marshalling -->
-        <dependency>
-            <groupId>org.jboss.marshalling</groupId>
-            <artifactId>jboss-marshalling</artifactId>
-            <version>2.0.9.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.marshalling</groupId>
-            <artifactId>jboss-marshalling-serial</artifactId>
-            <version>2.0.9.Final</version>
-        </dependency>
-        <!-- 序列化框架protobuf -->
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>3.6.1</version>
-        </dependency>
         <!-- netty end -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.uuid/java-uuid-generator -->
+        <!--顺序UUID-->
+        <dependency>
+            <groupId>com.fasterxml.uuid</groupId>
+            <artifactId>java-uuid-generator</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
     </dependencies>
 </project>
