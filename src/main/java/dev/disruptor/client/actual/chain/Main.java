@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class Main {
     public static void main(String[] args) throws InterruptedException {
+
         Stopwatch stopwatch = Stopwatch.createStarted();
         //构建一个线程池用于提交任务
         ExecutorService submitEs = Executors.newFixedThreadPool(4, r -> new Thread(r, "disruptor-executor"));
